@@ -14,28 +14,41 @@ import mx.volcanolabs.navexample.screens.SongsScreen
 fun MainNavigation(
     navController: NavHostController = rememberNavController()
 ) {
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
+        composable(Screen.Home.route) {
             HomeScreen(
                 onNavigateToSongs = {
-                    navController.navigate("songs")
+                    navController.navigate(Screen.Songs.route)
                 },
                 onNavigateToFavourites = {
-                    navController.navigate("favourites")
+                    navController.navigate(Screen.Favourites.route)
                 },
                 onNavigateToSearch = {
-                    navController.navigate("search")
+                    navController.navigate(Screen.Search.route)
                 }
             )
         }
-        composable("songs") {
+        composable(Screen.Songs.route) {
             SongsScreen()
         }
-        composable("favourites") {
+        composable(Screen.Favourites.route) {
             FavouritesScreen()
         }
-        composable("search") {
-            SearchScreen()
+        composable(Screen.Search.route) {
+            SearchScreen(
+                onNavigateToSongs = {
+                    navController.navigate(Screen.Songs.route) {
+                        popUpTo(Screen.Home.route)
+                    }
+                }
+            )
         }
     }
+}
+
+sealed class Screen(val route: String) {
+    object Home: Screen("home")
+    object Songs: Screen("songs")
+    object Favourites: Screen("favourites")
+    object Search: Screen("search")
 }
